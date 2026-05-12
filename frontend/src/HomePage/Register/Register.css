@@ -1,0 +1,154 @@
+/* 1. Reset & Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  background-color: #000;
+  color: #fff;
+}
+
+/* 2. Main Page Wrapper */
+.register-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  padding: 20px;
+}
+
+/* 3. Main Container */
+.register-container {
+  display: flex;
+  width: 100%;
+  max-width: 935px; /* Standard Instagram layout width */
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+}
+
+/* 4. Left Side (Image) */
+.register-left {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.register-left img {
+  max-height: 585px;
+  object-fit: cover;
+  border-radius: 8px; /* Optional: adds a slight curve to the hero image */
+}
+
+/* Hide image on smaller screens */
+@media (max-width: 875px) {
+  .register-left {
+    display: none;
+  }
+}
+
+/* 5. Right Side (Forms & Info) */
+.register-right {
+  width: 100%;
+  max-width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 6. The Cards (Form Box & Login Box) */
+.register-card, .login-card {
+  background-color: #000;
+  border: 1px solid #363636;
+  padding: 25px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.logo {
+  font-family: 'Lobster', cursive, sans-serif; /* Fallback to cursive if font not loaded */
+  font-size: 38px;
+  margin: 22px 0;
+  font-weight: 400;
+}
+
+.subtitle {
+  color: #8e8e8e;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+  margin-bottom: 20px;
+}
+
+/* 7. Form Styling */
+.register-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.register-form input {
+  width: 100%;
+  height: 38px;
+  padding: 9px 8px;
+  background: #121212;
+  border: 1px solid #363636;
+  border-radius: 3px;
+  color: white;
+  font-size: 12px;
+}
+
+.register-form input:focus {
+  border: 1px solid #a8a8a8;
+  outline: none;
+}
+
+.register-form button {
+  background-color: #0095f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 7px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.register-form button:hover {
+  background-color: #1877f2;
+}
+
+/* 8. Terms & Login Link */
+.terms {
+  color: #8e8e8e;
+  font-size: 12px;
+  margin: 15px 0;
+  line-height: 16px;
+}
+
+.login-card {
+  flex-direction: row; /* Horizontal "Have an account? Log in" */
+  justify-content: center;
+  gap: 5px;
+  padding: 20px;
+}
+
+.login-card p {
+  font-size: 14px;
+}
+
+.login-card a {
+  color: #0095f6;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+}

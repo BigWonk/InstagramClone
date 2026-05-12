@@ -1,0 +1,224 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+body {
+  background: #000;
+}
+
+.login-page {
+  width: 100%;
+  min-height: 100vh;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 1000px;
+  min-height: 650px;
+  background: #111;
+  border: 1px solid #262626;
+  border-radius: 30px;
+  overflow: hidden;
+  display: flex;
+  box-shadow: 0 0 40px rgba(0,0,0,0.5);
+}
+
+/* LEFT */
+
+.login-left {
+  flex: 1;
+  background: #000;
+}
+
+.login-left img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* RIGHT */
+
+.login-right {
+  width: 420px;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px;
+}
+
+.login-card {
+  width: 100%;
+  border: 1px solid #262626;
+  border-radius: 20px;
+  padding: 40px 35px;
+  background: #111;
+}
+
+.logo {
+  color: white;
+  text-align: center;
+  font-size: 42px;
+  margin-bottom: 40px;
+  font-family: cursive;
+}
+
+/* FORM */
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.login-form input {
+  width: 100%;
+  height: 52px;
+  background: #121212;
+  border: 1px solid #262626;
+  border-radius: 12px;
+  padding: 0 16px;
+  color: white;
+  font-size: 15px;
+  outline: none;
+}
+
+.login-form input:focus {
+  border-color: #555;
+}
+
+.login-form input::placeholder {
+  color: #888;
+}
+
+.login-form button {
+  width: 100%;
+  height: 50px;
+  border: none;
+  border-radius: 12px;
+  background: #0095f6;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: 0.2s;
+}
+
+.login-form button:hover {
+  background: #1877f2;
+}
+
+/* DIVIDER */
+
+.divider {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 26px 0;
+}
+
+.divider span {
+  flex: 1;
+  height: 1px;
+  background: #262626;
+}
+
+.divider p {
+  color: #888;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* GOOGLE */
+
+.google-btn {
+  width: 100%;
+  height: 50px;
+  background: transparent;
+  border: 1px solid #262626;
+  border-radius: 12px;
+  color: white;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: 0.2s;
+}
+
+.google-btn:hover {
+  background: #181818;
+}
+
+.google-btn i {
+  font-size: 18px;
+}
+
+/* FORGOT PASSWORD */
+
+.forgot-password {
+  display: block;
+  text-align: center;
+  margin-top: 24px;
+  color: #3797f0;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+/* REGISTER */
+
+.register-card {
+  margin-top: 18px;
+  border: 1px solid #262626;
+  border-radius: 18px;
+  background: #111;
+  padding: 24px;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+.register-card p {
+  color: white;
+}
+
+.register-card a {
+  color: #3797f0;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* MOBILE */
+
+@media (max-width: 900px)
+{
+  .login-container {
+    flex-direction: column;
+    max-width: 500px;
+  }
+
+  .login-left {
+    display: none;
+  }
+
+  .login-right {
+    width: 100%;
+    padding: 24px;
+  }
+
+  .login-card {
+    padding: 32px 24px;
+  }
+}

@@ -1,0 +1,188 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+body {
+  background: black;
+}
+
+.followers-page {
+  min-height: 100vh;
+  background: black;
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.followers-container {
+  width: 100%;
+  max-width: 700px;
+}
+
+/* SEARCH */
+
+.search-section {
+  margin-bottom: 30px;
+}
+
+.search-section h1 {
+  color: white;
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+.search-bar {
+  width: 100%;
+  height: 52px;
+  background: #121212;
+  border: 1px solid #262626;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  gap: 12px;
+}
+
+.search-bar i {
+  color: #888;
+  font-size: 16px;
+}
+
+.search-bar input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  font-size: 15px;
+}
+
+.search-bar input::placeholder {
+  color: #888;
+}
+
+/* RESULTS */
+
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* USER CARD */
+
+.user-card {
+  width: 100%;
+  min-height: 90px;
+  background: #111;
+  border: 1px solid #262626;
+  border-radius: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px;
+  transition: 0.2s;
+}
+
+.user-card:hover {
+  background: #181818;
+}
+
+.user-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.user-image {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.username-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.username-row h3 {
+  color: white;
+  font-size: 17px;
+}
+
+.verified {
+  color: #3797f0;
+  font-size: 15px;
+}
+
+.full-name {
+  color: #b3b3b3;
+  font-size: 14px;
+}
+
+.followers-count {
+  color: #888;
+  font-size: 13px;
+}
+
+.follow-btn {
+  border: none;
+  background: #0095f6;
+  color: white;
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.unfollow-btn {
+  border: none;
+  background: gray;
+  color: white;
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.unfollow-btn:hover {
+  background: rgb(85, 85, 85);
+}
+
+.follow-btn:hover {
+  background: #1877f2;
+}
+
+/* MOBILE */
+
+@media (max-width: 600px)
+{
+  .user-card {
+    padding: 14px;
+  }
+
+  .user-image {
+    width: 52px;
+    height: 52px;
+  }
+
+  .follow-btn {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+
+  .search-section h1 {
+    font-size: 26px;
+  }
+}

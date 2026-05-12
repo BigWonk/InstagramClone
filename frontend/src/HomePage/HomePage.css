@@ -1,0 +1,278 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+body {
+  background: #000;
+  color: white;
+  display: flex;
+  justify-content: center;
+}
+
+.app {
+  width: 100%;
+  max-width: 470px;
+  min-height: 100vh;
+  background: #000;
+  border-left: 1px solid #262626;
+  border-right: 1px solid #262626;
+}
+
+/* HEADER */
+
+.header {
+  height: 60px;
+  border-bottom: 1px solid #262626;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px;
+  position: sticky;
+  top: 0;
+  background: #000;
+  z-index: 100;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 700;
+  font-family: cursive;
+}
+
+.header-icons {
+  display: flex;
+  gap: 22px;
+  font-size: 22px;
+}
+
+/* STORIES */
+
+.stories {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding: 16px 12px;
+  border-bottom: 1px solid #262626;
+}
+
+.stories::-webkit-scrollbar {
+  display: none;
+}
+
+.story {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 72px;
+  cursor: pointer;
+}
+
+.story-ring {
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  background: linear-gradient(
+    45deg,
+    #f9ce34,
+    #ee2a7b,
+    #6228d7
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px;
+}
+
+.story-ring img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid black;
+}
+
+.story span {
+  margin-top: 6px;
+  font-size: 12px;
+  max-width: 70px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* POSTS */
+
+.post {
+  border-bottom: 1px solid #262626;
+  margin-bottom: 8px;
+}
+
+.post-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+}
+
+.post-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.post-user img {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.post-user-info h4 {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.post-user-info p {
+  font-size: 12px;
+  color: #a8a8a8;
+}
+
+.post-image img {
+  width: 100%;
+  display: block;
+}
+
+.post-actions {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 14px 8px;
+  font-size: 24px;
+}
+
+.left-actions {
+  display: flex;
+  gap: 18px;
+}
+
+.post-likes {
+  padding: 0 14px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.post-caption {
+  padding: 0 14px;
+  font-size: 14px;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.post-caption span {
+  font-weight: 600;
+  margin-right: 6px;
+}
+
+.post-comments {
+  padding: 0 14px;
+  color: #a8a8a8;
+  font-size: 14px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.post-time {
+  padding: 0 14px 14px;
+  color: #737373;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+/* BOTTOM NAV */
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  max-width: 470px;
+  background: black;
+  border-top: 1px solid #262626;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 58px;
+  font-size: 24px;
+}
+
+.bottom-nav img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.space {
+  height: 70px;
+}
+.page {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  background: black;
+}
+
+.posts {
+  padding-bottom: 70px;
+}
+.header {
+  height: 60px;
+  border-bottom: 1px solid #262626;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px;
+  position: sticky;
+  top: 0;
+  background: #000;
+  z-index: 100;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.search-bar {
+  width: 220px;
+  height: 38px;
+  background: #121212;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  gap: 10px;
+  border: 1px solid #262626;
+}
+
+.search-bar i {
+  color: #a8a8a8;
+  font-size: 14px;
+}
+
+.search-bar input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  width: 100%;
+  font-size: 14px;
+}
+
+.search-bar input::placeholder {
+  color: #a8a8a8;
+}
