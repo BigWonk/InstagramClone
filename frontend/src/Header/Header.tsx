@@ -33,7 +33,7 @@ function Header() {
           })
           if(data.status === 204)
           {
-            navigate("/")
+            navigate("/login")
           }
      }
 

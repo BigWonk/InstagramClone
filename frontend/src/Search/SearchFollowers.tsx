@@ -7,14 +7,14 @@ interface User {
   id: number;
   username: string;
   followers: number;
-  profileImage: string;
+  profile_picture: string;
   verified: boolean;
 }
 
 interface UserCardProps {
   username: string;
   followers: number;
-  profileImage: string;
+  profile_picture: string;
   verified: boolean;
   followStatus: boolean;
 }
@@ -26,17 +26,17 @@ interface UserCardProps {
 function UserCard({
   username,
   followers,
-  profileImage,
+  profile_picture,
   verified,
   followStatus
 }: UserCardProps) {
   return (
-    <div className="user-card">
+    <div className="user-card" >
 
       <div className="user-left">
 
         <img
-          src={profileImage}
+          src={profile_picture}
           alt={username}
           className="user-image"
         />
@@ -203,13 +203,12 @@ const unFollowUser = async(id) =>
 
           {result.map((user) => (
                 
-                <div className="user-card" key={user.id}>
+                <div className="user-card" key={user.id} onClick={() => navigate(`/accounts?id=${user.id}`)}>
 
       <div className="user-left">
 
         <img
-          src={user.profileImage}
-          alt={user.username}
+          src={user.profile_picture}
           className="user-image"
         />
 

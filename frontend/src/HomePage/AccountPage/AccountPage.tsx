@@ -3,23 +3,6 @@ import "./account.css";
 import { useEffect, useState } from "react";
 import Header from "../../Header/Header";
 
-const posts = [
-  {
-    id: 1,
-    image:
-      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop",
-  },
-  {
-    id: 2,
-    image:
-      "https://images.unsplash.com/photo-1494526585095-c41746248156?q=80&w=1200&auto=format&fit=crop",
-  },
-  {
-    id: 3,
-    image:
-      "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=1200&auto=format&fit=crop",
-  },
-];
 
 function AccountPage() {
       const [username, setUsername] = useState("")
@@ -28,6 +11,7 @@ function AccountPage() {
     const [profile_picture, setProfilePicture] = useState<null | string>(null)
     const [followers, setFollowers] = useState("")
     const [following, setFollowing] = useState("")
+    const[posts, setPosts] = useState([]);
     const navigate = useNavigate()
     useEffect(() =>
     {
@@ -53,9 +37,14 @@ function AccountPage() {
               credentials: "include"
             })
             const jsonFollowing = await dataFollowing.json()
-            
             setFollowing(jsonFollowing.message[0].count)
-        
+            
+            const PostsData =  await fetch("http://localhost:3001/api/posts/postsByUser",{
+              credentials: "include"
+            })
+            const jsonPosts = await PostsData.json()
+            const Posts = Array.isArray(jsonPosts.posts) ? jsonPosts.posts : [];
+            setPosts(Posts)
           }
 
 
@@ -95,7 +84,7 @@ function AccountPage() {
                 {username}
               </h1>
 
-              <button onClick={() => navigate("/editacc")}>
+              <button onClick={() => navigate("/account/edit")}>
                 Edit Profile
               </button>
 
@@ -103,6 +92,9 @@ function AccountPage() {
 
             <div className="profile-stats">
 
+                 <button onClick={() => navigate("/account/post")}>
+                Make a post
+              </button>
               <p>
                 <span>{0}</span> posts
               </p>
@@ -114,11 +106,12 @@ function AccountPage() {
               <p>
                 <span>{following}</span> following
               </p>
-
+            
             </div>
 
             <div className="profile-info">
-
+              
+             
               <h3>
                {username}
               </h3>
@@ -154,16 +147,26 @@ function AccountPage() {
 
               {posts.map((post) => (
 
-                <div
+                <div onClick={() => navigate(`/comments?id=${post.id}`)}
                   className="post-card"
                   key={post.id}
                 >
 
                   <img
-                    src={post.image}
+                    src={post.image_url}
                     alt="Post"
                   />
+                   <div className="post-overlay">
 
+                    <p>
+                      ❤ {post.likes_count}
+                    </p>
+
+                    <p>
+                      💬 {post.comments_count}
+                    </p>
+
+                  </div>
                 </div>
 
               ))}

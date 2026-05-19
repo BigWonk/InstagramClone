@@ -7,6 +7,9 @@ import LoginPage from './HomePage/Login/Login'
 import RegisterPage from './HomePage/Register/Register'
 import EditProfilePage from './HomePage/EditProfilePage/EditProfilePage'
 import AccountPage from './HomePage/AccountPage/AccountPage'
+import CommentsPage from './HomePage/Comments/Comments'
+import CreatePostPage from './HomePage/CreatePostPage/CreatePostPage'
+import UserProfilePage from './Search/UserProfilePage'
 
 function App() {
 
@@ -18,7 +21,11 @@ function App() {
         <Route path="/login" element={<LoginPage/>} />
         <Route path="/register" element={<RegisterPage/>} />
         <Route path="/account" element={<AccountPage/>} />
-        <Route path="/editacc" element={<EditProfilePage/>} />
+        <Route path="/account/edit" element={<EditProfilePage/>} />
+        <Route path="/comments" element={<CommentsPage/>} />
+        <Route path="/account/post" element={<CreatePostPage/>} />
+        <Route path="/accounts" element={<UserProfilePage/>} />
+
 
       </Routes>
       </BrowserRouter>

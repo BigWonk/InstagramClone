@@ -6,27 +6,38 @@ import { useNavigate } from "react-router-dom";
 function EditProfilePage() {
 
     const[name, setName] = useState("")
-     const[pic, setPic] = useState<null | string>(null)
+     const[pic, setPic] = useState<null | string | File>(null)
     const [firstEmail, setFirstEmail] = useState("")
      const [username, setUsername] = useState("")
     const [email, setEmail] = useState("")
    const [bio, setBio] = useState("")
-    const [profile_picture, setProfilePicture] = useState<null | string>("")
-  const navigate = useNavigate()
-     const FetchData = async() =>
-     {
-        const data = await fetch("http://localhost:3001/api/users/edit",{
-          method: "PUT",
-          credentials: "include",
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({username, profile_picture, email, bio})
-        })
-        if(data.status === 200)
-        {
-          navigate("/")
-        }
+    const [profile_picture, setProfilePicture] = useState<File | null>(null)
+    const navigate = useNavigate()
 
-     }
+    const FetchData = async() =>
+    {
+      const formData = new FormData();
+
+      if (profile_picture) {
+        formData.append("image", profile_picture);
+      }
+
+      formData.append("username", username);
+      formData.append("email", email);
+      formData.append("bio", bio);
+
+      const data = await fetch("http://localhost:3001/api/users/edit", {
+        method: "PUT",
+        credentials: "include",
+        body: formData
+      })
+      console.log(pic)
+      if(data.status === 200)
+      {
+        navigate("/")
+      }
+
+    }
      useEffect(() =>
          {
              const fetchData = async() =>
@@ -86,7 +97,7 @@ function EditProfilePage() {
 
         </div>
 
-        <form className="edit-form">
+        <form className="edit-form" encType="multipart/form-data">
 
           <div className="input-group">
 
@@ -95,10 +106,10 @@ function EditProfilePage() {
             </label>
 
             <input
-              type="text"
+              type="file"
               placeholder="image link"
-              value={profile_picture}
-              onChange={(e) => setProfilePicture(e.target.value)}
+              name = "image"
+              onChange={(e) => setProfilePicture(e.target.files[0])}
             />
 
           </div>

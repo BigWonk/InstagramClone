@@ -3,56 +3,8 @@ import "./HomePage.css";
 import { useNavigate } from "react-router-dom";
 import Header from "../Header/Header";
 
-const stories = [
-  {
-    id: 1,
-    username: "victor",
-    image: "https://i.pravatar.cc/150?img=1",
-  },
-  {
-    id: 2,
-    username: "alex",
-    image: "https://i.pravatar.cc/150?img=2",
-  },
-  {
-    id: 3,
-    username: "julia",
-    image: "https://i.pravatar.cc/150?img=3",
-  },
-  {
-    id: 4,
-    username: "maria",
-    image: "https://i.pravatar.cc/150?img=4",
-  },
-];
 
 
-const posts = [
-  {
-    id: 1,
-    username: "traveler",
-    location: "Italy",
-    profileImage: "https://i.pravatar.cc/150?img=6",
-    postImage:
-      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop",
-    likes: "12,482",
-    caption: "Beautiful sunset in Italy 🇮🇹",
-    comments: 382,
-    time: "4 HOURS AGO",
-  },
-  {
-    id: 2,
-    username: "photography",
-    location: "New York",
-    profileImage: "https://i.pravatar.cc/150?img=9",
-    postImage:
-      "https://images.unsplash.com/photo-1494526585095-c41746248156?q=80&w=1200&auto=format&fit=crop",
-    likes: "7,934",
-    caption: "NYC nights 🌃",
-    comments: 104,
-    time: "9 HOURS AGO",
-  },
-];
 
 
 
@@ -72,13 +24,11 @@ function StoryCard({ username, image }) {
 
 function PostCard({
   username,
-  location,
   profileImage,
   postImage,
   likes,
   caption,
-  comments,
-  time,
+  comments
 }) {
   return (
     <div className="post">
@@ -92,7 +42,6 @@ function PostCard({
 
           <div className="post-user-info">
             <h4>{username}</h4>
-            <p>{location}</p>
           </div>
 
         </div>
@@ -126,13 +75,11 @@ function PostCard({
         {caption}
       </div>
 
-      <div className="post-comments">
+      <div className="post-comments" >
         View all {comments} comments
       </div>
 
-      <div className="post-time">
-        {time}
-      </div>
+
 
     </div>
   );
@@ -142,9 +89,27 @@ function PostCard({
 
 function HomePage() {
   
-    const navigate = useNavigate()
+const navigate = useNavigate()
 const [name, setName] = useState("");
-    
+const [postss, setPosts] = useState([]);
+
+useEffect(() =>
+{
+  const fetchData = async () =>
+  {
+    const data = await fetch(`http://localhost:3001/api/posts/Allposts`,{
+      credentials: "include"
+    })
+    const json = await data.json();
+    const Posts = Array.isArray(json.posts) ? json.posts : [];
+    setPosts(Posts);
+
+  }
+  fetchData()
+},[])
+
+
+
 const handleSearch = async () =>
 {
   const data = await fetch(`http://localhost:3001/api/auth/verify`,{
@@ -159,6 +124,19 @@ const handleSearch = async () =>
       navigate("/login")
     }
 }
+const handleLike = async(id) =>
+{
+  const data = await fetch(`http://localhost:3001/api/posts/like/${id}`,{
+    method: "POST",
+    credentials: "include",
+    headers: { 'Content-Type': 'application/json' }
+  })
+  if(data.status == 200)
+  {
+    location.reload();
+  }
+}
+
 
 
     return (
@@ -207,18 +185,72 @@ const handleSearch = async () =>
 
         <div className="posts">
 
-          {posts.map((post) => (
-            <PostCard
-              key={post.id}
-              username={post.username}
-              location={post.location}
-              profileImage={post.profileImage}
-              postImage={post.postImage}
-              likes={post.likes}
-              caption={post.caption}
-              comments={post.comments}
-              time={post.time}
-            />
+          {postss.map((post) => (
+             <div className="post" key = {post.id}>
+
+      
+      <div className="post-top">
+
+        <div className="post-user">
+
+          <img src={post.profile_picture} alt={post.username} />
+
+          <div className="post-user-info">
+            <h4>{post.username}</h4>
+          </div>
+
+        </div>
+
+        <i className="fa-solid fa-ellipsis"></i>
+
+      </div>
+
+      <div className="post-image">
+        <img src={post.image_url} alt="Post" />
+      </div>
+
+      <div className="post-actions">
+
+      {post.checkliked ? (  <div className="left-actions">
+          <button className="liked-button" type="button" aria-label={`Like ${post.username}'s post`} onClick={() => handleLike(post.id)}>
+            <svg className="liked-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor" />
+            </svg>
+            <span className="like-count">{post.likes_count}</span>
+          </button>
+          <i className="fa-regular fa-comment"></i>
+          <i className="fa-regular fa-paper-plane"></i>
+        </div>):   
+        <div className="left-actions">
+          <button className="like-button" type="button" aria-label={`Like ${post.username}'s post`} onClick={() => handleLike(post.id)}>
+            <svg className="like-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor" />
+            </svg>
+            <span className="like-count">{post.likes_count}</span>
+          </button>
+          <i className="fa-regular fa-comment"></i>
+          <i className="fa-regular fa-paper-plane"></i>
+        </div>}
+
+        <i className="fa-regular fa-bookmark"></i>
+
+      </div>
+
+      <div className="post-likes">
+        {post.likes_count} likes
+      </div>
+
+      <div className="post-caption">
+        {post.caption}
+      </div>
+
+      <div className="post-comments" onClick={() => navigate(`/comments?id=${post.id}`)}>
+        View all {post.comments_count} comments
+      </div>
+
+
+
+    </div>
           ))}
 
         </div>
@@ -231,10 +263,6 @@ const handleSearch = async () =>
           <i className="fa-regular fa-square-plus"></i>
           <i className="fa-solid fa-clapperboard"></i>
 
-          <img
-            src="https://i.pravatar.cc/150?img=11"
-            alt="Profile"
-          />
 
         </div>
 

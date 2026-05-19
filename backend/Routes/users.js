@@ -1,7 +1,7 @@
 import pool from "../index.js";
 import express from "express"
 import { protect } from "../Middleware/auth.js"
-
+import { upload } from "../Middleware/image.js";
 
 const router = express.Router()
 
@@ -50,6 +50,21 @@ router.get("/followers", protect, async(req,res) =>
         res.status(500).json({message: "Internal server error while getting followers count"})
     }
 })
+router.get("/followers/:id", protect, async(req,res) =>
+{
+    try 
+    {
+        const userId = req.params.id
+        const result = await pool.query("SELECT COUNT(follower_id) FROM followers WHERE following_id = $1 ", [userId])
+        return res.status(200).json({message: result.rows})
+
+    } 
+    catch (error)
+    {
+        console.log(error);
+        res.status(500).json({message: "Internal server error while getting followers count"})
+    }
+})
 
 router.get("/following", protect, async(req,res) =>
 {
@@ -65,11 +80,30 @@ router.get("/following", protect, async(req,res) =>
         res.status(500).json({message: "Internal server error while getting followers count"})
     }
 })
+router.get("/following/:id", protect, async(req,res) =>
+{
+    try 
+    {
+        const userId = req.user.id
+        const result = await pool.query("SELECT COUNT(following_id) FROM followers WHERE follower_id = $1 ", [userId])
+        res.status(200).json({message: result.rows})
+    } 
+    catch (error)
+    {
+        console.log(error);
+        res.status(500).json({message: "Internal server error while getting followers count"})
+    }
+})
 
-router.put("/edit", protect, async (req,res) =>
+router.put("/edit", protect, upload.single("image"), async (req,res) =>
 {
     const userId = req.user.id
-    const {username, profile_picture, email, bio} = req.body;
+    const {username, email, bio} = req.body;
+    let profile_picture = null 
+    if(req.file)
+        {
+           profile_picture = `http://localhost:3001/Posts/${req.file.filename}`;
+        }
     
     try 
     {
@@ -159,7 +193,7 @@ router.get("/search/:name", protect, async(req,res) =>
     }
 })
 
-router.get("/:id", protect, async (req, res) =>
+router.get("/getUser/:id", protect, async (req, res) =>
 {
    const id = parseInt(req.params.id, 10)
    if (Number.isNaN(id)) {
