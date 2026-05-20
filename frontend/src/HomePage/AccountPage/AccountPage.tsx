@@ -9,8 +9,8 @@ function AccountPage() {
     const [email, setEmail] = useState("")
    const [bio, setBio] = useState("")
     const [profile_picture, setProfilePicture] = useState<null | string>(null)
-    const [followers, setFollowers] = useState("")
-    const [following, setFollowing] = useState("")
+    const [followers, setFollowers] = useState(0)
+    const [following, setFollowing] = useState(0)
     const[posts, setPosts] = useState([]);
     const navigate = useNavigate()
     useEffect(() =>

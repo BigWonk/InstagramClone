@@ -8,83 +8,6 @@ import Header from "../Header/Header";
 
 
 
-function StoryCard({ username, image }) {
-  return (
-    <div className="story">
-      <div className="story-ring">
-        <img src={image} alt={username} />
-      </div>
-
-      <span>{username}</span>
-    </div>
-  );
-}
-
-
-
-function PostCard({
-  username,
-  profileImage,
-  postImage,
-  likes,
-  caption,
-  comments
-}) {
-  return (
-    <div className="post">
-
-      
-      <div className="post-top">
-
-        <div className="post-user">
-
-          <img src={profileImage} alt={username} />
-
-          <div className="post-user-info">
-            <h4>{username}</h4>
-          </div>
-
-        </div>
-
-        <i className="fa-solid fa-ellipsis"></i>
-
-      </div>
-
-      <div className="post-image">
-        <img src={postImage} alt="Post" />
-      </div>
-
-      <div className="post-actions">
-
-        <div className="left-actions">
-          <i className="fa-regular fa-heart"></i>
-          <i className="fa-regular fa-comment"></i>
-          <i className="fa-regular fa-paper-plane"></i>
-        </div>
-
-        <i className="fa-regular fa-bookmark"></i>
-
-      </div>
-
-      <div className="post-likes">
-        {likes} likes
-      </div>
-
-      <div className="post-caption">
-        <span>{username}</span>
-        {caption}
-      </div>
-
-      <div className="post-comments" >
-        View all {comments} comments
-      </div>
-
-
-
-    </div>
-  );
-}
-
 
 
 function HomePage() {
@@ -136,7 +59,21 @@ const handleLike = async(id) =>
     location.reload();
   }
 }
-
+const handleUser = async(id) =>
+{
+  const data = await fetch(`http://localhost:3001/api/posts/checkId/${id}`,
+    {
+    credentials:"include"
+    })
+  if(data.status == 200)
+  {
+    navigate("/account")
+  }
+  else
+  {
+    navigate(`/accounts?id=${id}`)
+  }
+}
 
 
     return (
@@ -191,7 +128,7 @@ const handleLike = async(id) =>
       
       <div className="post-top">
 
-        <div className="post-user">
+        <div className="post-user" onClick={() => handleUser(post.user_id)}>
 
           <img src={post.profile_picture} alt={post.username} />
 

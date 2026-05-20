@@ -80,7 +80,21 @@ const [likeStatus, setLikeStatus] = useState(false);
     location.reload();
   }
 }
-
+const handleUser = async(id) =>
+{
+  const data = await fetch(`http://localhost:3001/api/posts/checkId/${id}`,
+    {
+    credentials:"include"
+    })
+  if(data.status == 200)
+  {
+    navigate("/account")
+  }
+  else
+  {
+    navigate(`/accounts?id=${id}`)
+  }
+}
  return (
 <div>
 
@@ -144,11 +158,12 @@ const [likeStatus, setLikeStatus] = useState(false);
                   src={comment.profile_picture}
                   alt={comment.username}
                   className="comment-profile"
-                />
+                  onClick={() => handleUser(comment.user_id)}
+                  />
 
                 <div className="comment-content">
 
-                  <div className="comment-top">
+                  <div className="comment-top" onClick={() => handleUser(comment.user_id)}>
 
                     <h4>
                       {comment.username}

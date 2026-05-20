@@ -84,7 +84,7 @@ router.get("/following/:id", protect, async(req,res) =>
 {
     try 
     {
-        const userId = req.user.id
+        const userId = req.params.id
         const result = await pool.query("SELECT COUNT(following_id) FROM followers WHERE follower_id = $1 ", [userId])
         res.status(200).json({message: result.rows})
     } 

@@ -34,14 +34,15 @@ router.get("/Allposts",protect,async(req, res) =>
     try 
     {
         const userId = req.user.id
-        const result = await pool.query(`SELECT posts.*, users.username, users.profile_picture, COUNT(DISTINCT likes.user_id) AS likes_count, COUNT(DISTINCT comments.user_id) AS comments_count, CASE WHEN COUNT(DISTINCT CASE WHEN likes.user_id = $1 THEN 1 END) > 0 THEN true ELSE false END AS checkliked FROM posts 
+        const result = await pool.query(`SELECT posts.*, users.username, users.profile_picture, users.id AS user_id, COUNT(DISTINCT likes.user_id) AS likes_count, COUNT(DISTINCT comments.user_id) AS comments_count, CASE WHEN COUNT(DISTINCT CASE WHEN likes.user_id = $1 THEN 1 END) > 0 THEN true ELSE false END AS checkliked FROM posts 
             JOIN users ON users.id = posts.user_id 
             LEFT JOIN likes ON posts.id = likes.post_id 
             LEFT JOIN comments ON posts.id = comments.post_id    
             
             GROUP BY posts.id,
                 users.username,
-                users.profile_picture`, [userId])    
+                users.profile_picture,
+                users.id`, [userId])    
 
         return res.status(200).json({posts: result.rows})
     } 
@@ -121,7 +122,7 @@ router.get("/checkLiked/:id", protect, async(req, res) =>
         }
         else
         {
-            return res.status(404).json({message: "havent liked!"})
+            return res.status(304).json({message: "havent liked!"})
         }
     } 
     catch (error) 
@@ -173,6 +174,20 @@ router.delete("/delete/:id", protect, async(req,res) =>
         return res.status(500).json({message: "Server error while deleting an post"})
     }
 })
+router.get("/checkId/:id", protect, async(req,res) =>
+{
+    const userId = req.user.id
+    const UserId = req.params.id
+    
+    if(userId == UserId)
+    {
+        return res.status(200).json({isOwner: true})
+    }
+    else if(userId != UserId)
+    {
+        return res.status(302).json({isOwner: false})
+    }
+})
 
 router.post("/comment/:id", protect, async (req, res) =>
 {
@@ -195,7 +210,7 @@ router.get("/comments/:id",protect,async(req, res) =>
     const postId = req.params.id
     try 
     {
-        const result = await pool.query(`SELECT comments.content, users.username, users.profile_picture
+        const result = await pool.query(`SELECT comments.content, users.username, users.profile_picture, users.id AS user_id
             FROM comments 
             JOIN users ON users.id = comments.user_id 
             WHERE comments.post_id = $1`, [postId])    
@@ -208,5 +223,6 @@ router.get("/comments/:id",protect,async(req, res) =>
         return res.status(500).json({message: "Error while fetching all comments"})    
     }
 })
+
 
 export default router

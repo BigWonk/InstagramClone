@@ -39,6 +39,7 @@ function UserProfilePage() {
     const[posts, setPosts] = useState([]);
     const [followStatus, setFollowStatus] = useState(false);
     const navigate = useNavigate()
+    
     useEffect(() =>
     {
         const fetchData = async() =>
@@ -86,7 +87,15 @@ function UserProfilePage() {
             {
                  setFollowStatus(true)
             }
-            
+            const checkId = await fetch(`http://localhost:3001/api/posts/checkId/${id}`,
+            {
+                credentials:"include"
+            })
+            if(checkId.status == 200)
+            {
+              navigate("/account")
+            }
+
         }
         fetchData()
     },[])

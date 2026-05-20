@@ -40,12 +40,18 @@ router.post("/login", async (req, res) =>
         }
     const token = generateToken(userData.id);
     res.cookie("token", token, cookieOptions)
-    res.json({user: {id: userData.id, name: userData.name, email: userData.email}})
-    return res.status(200).json({message: "User logged in succesfully"})
+    return res.status(200).json({
+        message: "User logged in succesfully",
+        user: {
+            id: userData.id,
+            name: userData.name,
+            email: userData.email
+        }
+    })
 } 
     catch (error) 
     {
-                console.log(error)
+        console.log(error)
         return res.status(500).json({message: "Server error while registering"})
     }
 })
