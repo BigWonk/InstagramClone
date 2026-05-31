@@ -18,6 +18,7 @@ router.post("/uploadPost", protect, upload.single("file"), async (req, res) =>
     {
         post = `http://localhost:3001/Posts/${req.file.filename}`
     }
+    
     try 
     {
         const result = await pool.query("INSERT INTO posts(user_id, caption, image_url) VALUES($1,$2,$3)", [userId, caption, post])

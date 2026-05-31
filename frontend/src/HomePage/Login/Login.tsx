@@ -27,6 +27,7 @@ function LoginPage() {
     else
     {
       navigate("/")
+      location.reload()
     }
   
   }

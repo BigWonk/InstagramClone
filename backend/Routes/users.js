@@ -3,6 +3,7 @@ import express from "express"
 import { protect } from "../Middleware/auth.js"
 import { upload } from "../Middleware/image.js";
 
+
 const router = express.Router()
 
 router.get("/checkFollow/:id", protect, async(req, res) =>
@@ -103,14 +104,24 @@ router.put("/edit", protect, upload.single("image"), async (req,res) =>
     if(req.file)
         {
            profile_picture = `http://localhost:3001/Posts/${req.file.filename}`;
+            
         }
     
     try 
     {
+        if(!req.file)
+        {
+            const result = await pool.query("UPDATE users SET username = $1, bio = $2, email = $3 WHERE id = $4 RETURNING *", [username, bio, email, userId])
+            return res.status(200).json({message: "Succesfully updated user profile!"}) 
+
+        }
+       else
+       {
         const result = await pool.query("UPDATE users SET username = $1, profile_picture = $2, bio = $3, email = $4 WHERE id = $5 RETURNING *", [username, profile_picture, bio, email, userId])
-        
         return res.status(200).json({message: "Succesfully updated user profile!"}) 
     } 
+       }
+        
     catch (error) 
     {
         console.log(error)
@@ -202,6 +213,9 @@ router.get("/getUser/:id", protect, async (req, res) =>
     try 
     {
         const result = await pool.query("SELECT * FROM users WHERE id = $1", [id])
+        if (result.rows.length === 0) {
+            return res.status(404).json({message: "User not found"});
+        }
         return res.status(200).json({user: result.rows})
     } 
     catch (error) 

@@ -32,6 +32,8 @@ function RegisterPage() {
       else
       {
           navigate("/")
+          location.reload()
+
       }
   }
 

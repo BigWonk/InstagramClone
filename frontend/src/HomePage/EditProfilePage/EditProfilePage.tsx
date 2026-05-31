@@ -11,7 +11,7 @@ function EditProfilePage() {
      const [username, setUsername] = useState("")
     const [email, setEmail] = useState("")
    const [bio, setBio] = useState("")
-    const [profile_picture, setProfilePicture] = useState<File | null>(null)
+    const [profile_picture, setProfilePicture] = useState<File | null>()
     const navigate = useNavigate()
 
     const FetchData = async() =>
@@ -49,6 +49,10 @@ function EditProfilePage() {
                  setName(json.username)
                  setPic(json.profile_picture)
                  setFirstEmail(json.email)
+                 setUsername(json.username)
+                 setProfilePicture(json.profile_picture)
+                 setEmail(json.email)
+                 setBio(json.bio)
              }
              fetchData()
          },[])
@@ -109,7 +113,14 @@ function EditProfilePage() {
               type="file"
               placeholder="image link"
               name = "image"
-              onChange={(e) => setProfilePicture(e.target.files[0])}
+              accept="image/*"
+              onChange={(e) => 
+              {
+                setProfilePicture(e.target.files?.[0])
+                const picture = e.target.files?.[0]
+                setPic(URL.createObjectURL(picture))
+
+              }}
             />
 
           </div>

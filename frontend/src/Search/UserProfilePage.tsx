@@ -3,28 +3,7 @@ import "./userProfile.css";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Header from "../Header/Header";
 
-const posts = [
-  {
-    id: 1,
-    image:
-      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop"
-  },
-  {
-    id: 2,
-    image:
-      "https://images.unsplash.com/photo-1494526585095-c41746248156?q=80&w=1200&auto=format&fit=crop"
-  },
-  {
-    id: 3,
-    image:
-      "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=1200&auto=format&fit=crop"
-  },
-  {
-    id: 4,
-    image:
-      "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1200&auto=format&fit=crop"
-  }
-];
+
 
 function UserProfilePage() {
    
@@ -32,7 +11,8 @@ function UserProfilePage() {
     const id = searchParams.get("id") || "";
     const [username, setUsername] = useState("")
     const [email, setEmail] = useState("")
-   const [bio, setBio] = useState("")
+    const[Id, setId] =  useState();
+    const [bio, setBio] = useState("")
     const [profile_picture, setProfilePicture] = useState<null | string>(null)
     const [followers, setFollowers] = useState("")
     const [following, setFollowing] = useState("")
@@ -54,6 +34,7 @@ function UserProfilePage() {
             setEmail(json.user[0].email)
             setBio(json.user[0].bio)
             setProfilePicture(json.user[0].profile_picture)
+            setId(json.user[0].id)
             
             const dataFollowers = await fetch(`http://localhost:3001/api/users/followers/${id}`,{
               credentials: "include"
@@ -123,6 +104,21 @@ function UserProfilePage() {
                 location.reload();
             }
         }
+
+        const handleConversation = async() =>
+        {
+          const data = await fetch(`http://localhost:3001/api/conversations/addConversation/${Id}`,
+            {
+              method: "POST",
+              credentials: "include",
+               headers: { 'Content-Type': 'application/json' }
+            })
+            const json = await data.json();
+            const Conv = Array.isArray(json.conversation) ? json.conversation : [];
+
+            const convId = json.conversation[0].id
+            navigate(`/chatpage?id=${convId}`)
+        }
   
   
     return (
@@ -170,7 +166,7 @@ function UserProfilePage() {
         </button>
       )}
 
-              <button className="message-btn">
+              <button className="message-btn" onClick={handleConversation}>
                 Message
               </button>
 
