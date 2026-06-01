@@ -48,16 +48,31 @@ router.get("/conversationsUser", protect, async (req,res) =>
     
     try 
     {
-          const result = await pool.query(`SELECT conversations.*, conversation_members.user_id, users.username, users.profile_picture 
-            FROM conversation_members
+                    const result = await pool.query(`
+                        SELECT
+                            c.*,
+                            cm_other.user_id AS other_user_id,
+                            u.username,
+                            u.profile_picture,
+                            lm.content AS last_message,
+                            lm.id AS last_message_id,
+                            lm.image_url AS last_message_image,
+                            (SELECT COUNT(*) FROM messages m2 WHERE m2.conversation_id = c.id AND m2.sender_id != $1 AND m2.is_seen = FALSE) AS notseen_count
+                        FROM conversations c
+                        JOIN conversation_members cm_me ON cm_me.conversation_id = c.id AND cm_me.user_id = $1
+                        JOIN conversation_members cm_other ON cm_other.conversation_id = c.id AND cm_other.user_id != $1
+                        JOIN users u ON u.id = cm_other.user_id
+                        LEFT JOIN LATERAL (
+                            SELECT content, id, image_url
+                            FROM messages m
+                            WHERE m.conversation_id = c.id
+                            ORDER BY id DESC
+                            LIMIT 1
+                        ) lm ON true
+                        ORDER BY lm.id DESC NULLS LAST
+                    `, [userId])
 
-            JOIN conversations ON conversation_members.conversation_id = conversations.id
-            JOIN users ON conversation_members.user_id = users.id
-            WHERE conversation_members.user_id != $1
-            GROUP BY
-             conversations.id, conversation_members.user_id, users.username, users.profile_picture `, [userId])
-
-            return res.status(200).json({conversation: result.rows})
+                        return res.status(200).json({conversation: result.rows})
     } 
     catch (error) 
     {
@@ -113,7 +128,7 @@ router.get("/messages/:id", protect, async (req,res) =>
     try 
     {
         const conversationId = req.params.id
-        const result = await pool.query(`SELECT * FROM messages WHERE conversation_id = $1 ORDER BY id`, [conversationId])
+        const result = await pool.query(`SELECT * FROM messages WHERE conversation_id = $1 ORDER BY id` , [conversationId])
         return res.status(200).json({message: result.rows})    
     }
     catch (error) 
@@ -150,6 +165,21 @@ router.put("/seen/:id", protect, async(req,res) =>
     {
         console.log(error);
         return res.status(500).json({message: "Internal server error while seeing an message"})    
+    }
+})
+router.get("/checkUsers/:id", protect, async(req,res) =>
+{
+    try 
+    {
+        const conversationId = req.params.id
+        const result = await pool.query(`SELECT user_id FROM conversation_members WHERE conversation_id = $1`,[conversationId])
+        return res.status(200).json({users: result.rows})    
+
+    } 
+    catch (error) 
+    {
+        console.log(error);
+        return res.status(500).json({message: "Internal server error while seeing an message"})
     }
 })
 

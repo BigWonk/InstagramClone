@@ -35,15 +35,21 @@ router.get("/Allposts",protect,async(req, res) =>
     try 
     {
         const userId = req.user.id
-        const result = await pool.query(`SELECT posts.*, users.username, users.profile_picture, users.id AS user_id, COUNT(DISTINCT likes.user_id) AS likes_count, COUNT(DISTINCT comments.user_id) AS comments_count, CASE WHEN COUNT(DISTINCT CASE WHEN likes.user_id = $1 THEN 1 END) > 0 THEN true ELSE false END AS checkliked FROM posts 
+        const cursor = req.query.cursor ? Number(req.query.cursor) : null
+        const params = [userId]
+        let query = `SELECT posts.*, users.username, users.profile_picture, users.id AS user_id, COUNT(DISTINCT likes.user_id) AS likes_count, COUNT(DISTINCT comments.user_id) AS comments_count, CASE WHEN COUNT(DISTINCT CASE WHEN likes.user_id = $1 THEN 1 END) > 0 THEN true ELSE false END AS checkliked FROM posts 
             JOIN users ON users.id = posts.user_id 
             LEFT JOIN likes ON posts.id = likes.post_id 
-            LEFT JOIN comments ON posts.id = comments.post_id    
-            
-            GROUP BY posts.id,
-                users.username,
-                users.profile_picture,
-                users.id`, [userId])    
+            LEFT JOIN comments ON posts.id = comments.post_id ` 
+
+            if (cursor)
+            {
+                query += ` WHERE posts.id < $2`
+                params.push(cursor)
+            }
+            query += ` GROUP BY posts.id, users.username, users.profile_picture, users.id ORDER BY id DESC LIMIT 5`;
+
+        const result = await pool.query(query, params);
 
         return res.status(200).json({posts: result.rows})
     } 
@@ -81,7 +87,8 @@ router.get("/postsByUser", protect, async(req, res) =>
             LEFT JOIN likes ON posts.id = likes.post_id 
             LEFT JOIN comments ON posts.id = comments.post_id    
             WHERE posts.user_id = $1
-            GROUP BY posts.id`
+            GROUP BY posts.id
+            ORDER BY id DESC`
                 ,[userId])     
         return res.status(200).json({posts: result.rows})
     } 

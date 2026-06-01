@@ -23,6 +23,23 @@ function Header() {
         }
 
       }
+       const fetchDataChats = async() =>
+    {
+        const data = await fetch("http://localhost:3001/api/auth/verify",
+          {
+            credentials: "include"
+          }
+        )
+        if(data.status != 200)
+        {
+            navigate("/login")
+        }
+        else
+        {
+          navigate("/chats")
+        }
+
+      }
      const LogOut = async () =>
      {
         const data = await fetch("http://localhost:3001/api/auth/logout",
@@ -45,7 +62,7 @@ function Header() {
 
 
       <div className="header-logo">
-        Instagram
+        Smegmagram
       </div>
 
 
@@ -57,6 +74,11 @@ function Header() {
           Home
         </Link>
 
+        <Link to="/chats" className="nav-link" onClick={fetchDataChats}>
+          <i className="fa-solid fa-image"></i>
+          Chats
+        </Link>    
+        
         <Link to="/account" className="nav-link" onClick={fetchDataAccount}>
           <i className="fa-solid fa-image"></i>
           Account

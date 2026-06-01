@@ -4,6 +4,8 @@ import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
 import pool from "../index.js"
 import { protect } from "../Middleware/auth.js"
+import { upload } from "../Middleware/image.js"
+
 const router = express.Router()
 
 const cookieOptions =
@@ -56,12 +58,17 @@ router.post("/login", async (req, res) =>
     }
 })
 
-router.post("/register", async (req, res) =>
+router.post("/register", upload.single("file"), async (req, res) =>
 {
     try 
     {
-       const {username ,email, password, profile_picture} = req.body 
-       if(!email || !password || !username || !profile_picture)
+       const {username ,email, password} = req.body 
+       let profile_picture = null
+        if(req.file)
+        {
+             profile_picture = `http://localhost:3001/Posts/${req.file.filename}`
+        }
+       if(!email || !password || !username)
        {
             return res.status(404).json({message: "Please send all required fields!"})
        }

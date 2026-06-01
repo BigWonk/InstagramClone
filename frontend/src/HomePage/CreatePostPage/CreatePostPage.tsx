@@ -8,6 +8,7 @@ function CreatePostPage() {
     const [user, setUser] = useState();
     const [caption, setCaption] = useState("");
     const [file, setFile] = useState<File | null>(null);
+    const[postImage, setPostImage] = useState("");
     const navigate = useNavigate();
 
     useEffect(() =>
@@ -73,11 +74,12 @@ function CreatePostPage() {
         <div className="create-post-content">
 
 
+          
           <div className="image-upload-section">
-
+          
             <div className="image-preview">
-
-              <i className="fa-regular fa-image"></i>
+            <img src={postImage} alt="" style={{maxWidth:500, maxHeight:500}} />
+              
 
               <p>
                 Upload Photo or Video
@@ -88,7 +90,14 @@ function CreatePostPage() {
             <input
               type="file"
               className="file-input"
-              onChange={(e) => setFile(e.target.files?.[0] || null)}
+              accept="image/*"
+              onChange={(e) => 
+              {
+                setFile(e.target.files?.[0] || null)
+                const picture = e.target.files?.[0];
+                setPostImage(URL.createObjectURL(picture))
+
+              }}
             />
 
           </div>

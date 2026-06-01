@@ -3,6 +3,7 @@ import "./activeUsers.css";
 import {socket} from "../../App"
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import type path from "path";
 interface User {
   id: number;
   username: string;
@@ -25,6 +26,7 @@ function ActiveUsersPage() {
 
   const [users, setUsers] = useState<OnlineUser[]>([]);
   const[usersData, setUsersData] = useState<User[]>([])
+  const [userData, setUserData] = useState<User>()
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -65,6 +67,31 @@ function ActiveUsersPage() {
     fetchUserDetails();
   }, [users]);
 
+  useEffect(() =>
+  {
+    const fetchData = async() =>
+    {
+      const data = await fetch("http://localhost:3001/api/auth/me", {
+        credentials: "include"
+      })
+      const json = await data.json()
+      setUserData(json);
+    }
+    fetchData()
+  },[])
+
+  const handleChat = async(id) =>
+  {
+    const data = await fetch(`http://localhost:3001/api/conversations/addConversation/${id}`,
+            {
+              method: "POST",
+              credentials: "include",
+               headers: { 'Content-Type': 'application/json' }
+            })
+            const json = await data.json();
+            const convId = json.conversation[0].id
+            navigate(`/chatpage?id=${convId}`)
+  }
 
 
 
@@ -100,7 +127,7 @@ function ActiveUsersPage() {
               </div>
 
               <div className="user-actions">
-                <button className="message-btn">Message</button>
+                {user.id == userData?.id ? (<p></p>): (<button className="message-btn" onClick={() => handleChat(user.id)}>Message</button>) }
                 <button className="profile-btn" onClick={() => navigate(`/accounts?id=${user.id}`)}>View Profile</button>
               </div>
             </div>

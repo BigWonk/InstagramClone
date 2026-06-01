@@ -1,35 +1,88 @@
-import { use, useEffect, useState } from "react";
+import { use, useCallback, useEffect, useRef, useState } from "react";
 import "./HomePage.css";
 import { useNavigate } from "react-router-dom";
 import Header from "../Header/Header";
-
-
-
-
-
-
-
+import { DiVim } from "react-icons/di";
 
 function HomePage() {
   
 const navigate = useNavigate()
 const [name, setName] = useState("");
 const [postss, setPosts] = useState([]);
+const [cursor, setCursor] = useState(null);
+const [hasMore, setHasMore] = useState(true);
+const [loading, setLoading] = useState(false);
+const loaderRef = useRef(null);
+const isFetchingRef = useRef(false)
 
-useEffect(() =>
+const checkLogged = async () =>
 {
-  const fetchData = async () =>
-  {
-    const data = await fetch(`http://localhost:3001/api/posts/Allposts`,{
+  const data = await fetch(`http://localhost:3001/api/auth/me`,{
       credentials: "include"
     })
-    const json = await data.json();
-    const Posts = Array.isArray(json.posts) ? json.posts : [];
-    setPosts(Posts);
-
-  }
-  fetchData()
+    if(data.status != 200)
+    {
+        navigate("/login")
+    }
+}
+useEffect(() =>
+{
+  checkLogged()
 },[])
+
+
+  const fetchData = useCallback(async () => {
+   if (!hasMore || loading || isFetchingRef.current) return;
+   isFetchingRef.current = true;
+   setLoading(true);
+    try {
+      const url = cursor
+        ? `http://localhost:3001/api/posts/Allposts?cursor=${cursor}`
+        : `http://localhost:3001/api/posts/Allposts`;
+
+      const data = await fetch(url, { credentials: "include" });
+      if (!data.ok) {
+        setHasMore(false);
+        return;
+      }
+
+      const json = await data.json();
+      const Posts = Array.isArray(json.posts) ? json.posts : [];
+      setPosts((prev) => [...prev, ...Posts]);
+
+      const lastPost = Posts[Posts.length - 1];
+      if (lastPost && lastPost.id != null) {
+        setCursor(lastPost.id);
+      }
+
+      setHasMore(Posts.length === 5);
+      } catch (err) {
+      console.error("fetchData error:", err);
+      setHasMore(false);
+    } finally {
+      setLoading(false);
+      isFetchingRef.current = false;
+    }
+  }, [cursor, hasMore]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+
+  useEffect(() => {
+    if (!loaderRef.current || !hasMore) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) fetchData();
+    });
+
+    const node = loaderRef.current;
+    observer.observe(node);
+
+    return () => observer.disconnect();
+  }, [hasMore, fetchData]);
+
 
 
 
@@ -90,7 +143,7 @@ const handleUser = async(id) =>
         <div className="header">
 
   <div className="logo">
-    Instagram
+    Smegmagram
   </div>
 
   <div className="header-right">
@@ -184,25 +237,19 @@ const handleUser = async(id) =>
       <div className="post-comments" onClick={() => navigate(`/comments?id=${post.id}`)}>
         View all {post.comments_count} comments
       </div>
-
-
+      
 
     </div>
           ))}
 
         </div>
 
+          {loading && <p>Loading...</p>}
+          
+      <div ref={loaderRef}></div>
+        
 
-        <div className="bottom-nav">
-
-          <i className="fa-solid fa-house"></i>
-          <i className="fa-solid fa-magnifying-glass"></i>
-          <i className="fa-regular fa-square-plus"></i>
-          <i className="fa-solid fa-clapperboard"></i>
-
-
-        </div>
-
+        
       </div>
 
     </div>

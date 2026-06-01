@@ -14,6 +14,7 @@ import ActiveUsersPage from './HomePage/ActiveUsersPage/ActiveUsersPage'
 import ChatPage from "./Messages/ChatPage"
 import { useEffect, useState } from 'react'
 import { io } from "socket.io-client";
+import AvalibleChats from './HomePage/AvalibleChats/AvalibleChats'
 
 
 
@@ -64,6 +65,9 @@ function App() {
         <Route path="/accounts" element={<UserProfilePage/>} />
         <Route path="/activeUsers" element={<ActiveUsersPage/>} />
         <Route path="/chatPage" element={<ChatPage/>} />
+        <Route path="/chats" element={<AvalibleChats/>} />
+
+
 
 
 

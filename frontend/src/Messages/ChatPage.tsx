@@ -39,9 +39,14 @@ useEffect(() =>
       setUsername(jsonUserData.conversation[0].username)
       setReceiverId(jsonUserData.conversation[0].user_id)
       setPfp(jsonUserData.conversation[0].profile_picture)
+
+      
     }
     fetchData()
 }, [])
+
+
+
 
 
   useEffect(() =>
@@ -63,7 +68,7 @@ useEffect(() =>
     {
       
       const MessagesData = await fetch(`http://localhost:3001/api/conversations/messages/${id}`,{
-        credentials: "include"
+        credentials: "include",
       }) 
       const jsonMessagesData = await MessagesData.json()
       const Messages = Array.isArray(jsonMessagesData.message) ? jsonMessagesData.message : [];
@@ -74,6 +79,19 @@ useEffect(() =>
       }) 
       const jsonHostData = await HostData.json()
       setUserId(jsonHostData.id)
+      
+      const UserData = await fetch(`http://localhost:3001/api/conversations/checkUsers/${id}`,{
+        credentials: "include"
+      }) 
+    const jsonUserData = await UserData.json()
+    const userId1 = jsonUserData.users[0].user_id
+    const userId2 = jsonUserData.users[1].user_id
+    if(jsonHostData.id !== userId1 && jsonHostData.id !== userId2)
+    {
+      navigate("/")
+    }
+      
+      
       const seenMessages = await fetch(`http://localhost:3001/api/conversations/seen/${id}`,
         {
           method: "PUT",
@@ -93,6 +111,8 @@ useEffect(() =>
 
   },[])
 
+
+  
   useEffect(() =>
   {
     if(!receiverId) return
@@ -158,7 +178,7 @@ useEffect(() =>
     setTimeout(() =>
     {
       setTyping(false)
-    }, 100000)
+    }, 2000)
   })
 
  

@@ -17,7 +17,7 @@ function LoginPage() {
       method: "POST",
       credentials: "include",
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({username,password})
+      body: JSON.stringify({username: username.trim(),password: password.trim()})
     })
     const json = await data.json()
     if(data.status === 404)
@@ -45,7 +45,6 @@ function LoginPage() {
 
         <div className="login-right">
           <div className="login-card">
-            <h1 className="logo">Instagram</h1>
 
             <form className="login-form" onSubmit={handleSubmit}>
               <input

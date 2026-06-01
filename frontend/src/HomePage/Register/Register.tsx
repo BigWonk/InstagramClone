@@ -7,7 +7,7 @@ function RegisterPage() {
   const [username, setUsername] = useState("")
     const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [profile_picture, setProfilePic] = useState("")
+  const [profile_picture, setProfilePic] = useState<File | null>(null)
   const [error, setError] = useState("")
   const navigate = useNavigate()
   const handleSubmit = async (e) =>
@@ -17,12 +17,17 @@ function RegisterPage() {
       if(!email || !username || !password || !profile_picture)
     {
       setError("Please give a value to all fields")
+      return
     }
+    const formData = new FormData()
+    formData.append("username", username.trim())
+    formData.append("email", email.trim())
+    formData.append("password", password.trim())
+    if (profile_picture) formData.append("file", profile_picture)
     const data = await fetch("http://localhost:3001/api/auth/register",
         {method: "POST",
         credentials: "include",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({username, email, password, profile_picture})
+        body: formData
       })
       const json = await data.json()
       if(data.status === 404)
@@ -42,9 +47,6 @@ function RegisterPage() {
 
       <div className="register-box">
 
-        <h1 className="register-logo">
-          Instagram
-        </h1>
 
         <p className="register-subtitle">
           Sign up to connect with friends and share moments.
@@ -76,11 +78,12 @@ function RegisterPage() {
             required
           />
             <input
-            type="text"
+            type="file"
             placeholder="Profile pic"
-            value={ profile_picture}
-            onChange={(e) => setProfilePic(e.target.value)}
-            required
+            name = "file"
+            accept="image/*"
+            onChange={(e) => setProfilePic(e.target.files?.[0] ?? null)}
+            
           />
 
 
