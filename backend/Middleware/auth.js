@@ -12,7 +12,7 @@ export const protect = async(req, res, next) =>
             const token = req.cookies.token
             if(!token)
             {
-            return res.status(404).json({message: "Token not found"})
+            return res.status(401).json({message: "Token not found"})
             }
             const decoded = jwt.verify(token, process.env.JWT_SECRET)
             const user = await pool.query("SELECT id, username, email, bio, profile_picture FROM users WHERE id = $1 ", [decoded.id])

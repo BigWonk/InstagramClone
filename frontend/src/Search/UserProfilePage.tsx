@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./userProfile.css";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Header from "../Header/Header";
+import { API_URL } from "../api";
 
 
 
@@ -24,7 +25,7 @@ function UserProfilePage() {
     {
         const fetchData = async() =>
         {
-            const data = await fetch(`http://localhost:3001/api/users/getUser/${id}`,{
+            const data = await fetch(`${API_URL}/api/users/getUser/${id}`,{
               credentials: "include"
             })
             const json = await data.json()
@@ -36,7 +37,7 @@ function UserProfilePage() {
             setProfilePicture(json.user[0].profile_picture)
             setId(json.user[0].id)
             
-            const dataFollowers = await fetch(`http://localhost:3001/api/users/followers/${id}`,{
+            const dataFollowers = await fetch(`${API_URL}/api/users/followers/${id}`,{
               credentials: "include"
             })
             const jsonFollowers = await dataFollowers.json()
@@ -44,20 +45,20 @@ function UserProfilePage() {
             
             
             
-            const dataFollowing = await fetch(`http://localhost:3001/api/users/following/${id}`,{
+            const dataFollowing = await fetch(`${API_URL}/api/users/following/${id}`,{
               credentials: "include"
             })
             const jsonFollowing = await dataFollowing.json()
             setFollowing(jsonFollowing.message[0].count)
             
-            const PostsData =  await fetch(`http://localhost:3001/api/posts/postsByUser/${id}`,{
+            const PostsData =  await fetch(`${API_URL}/api/posts/postsByUser/${id}`,{
               credentials: "include"
             })
             const jsonPosts = await PostsData.json()
             const Posts = Array.isArray(jsonPosts.posts) ? jsonPosts.posts : [];
             setPosts(Posts)
             
-            const followData =  await fetch(`http://localhost:3001/api/users/checkFollow/${id}`,{
+            const followData =  await fetch(`${API_URL}/api/users/checkFollow/${id}`,{
               credentials: "include"
             })
             if(followData.status == 200)
@@ -68,7 +69,7 @@ function UserProfilePage() {
             {
                  setFollowStatus(true)
             }
-            const checkId = await fetch(`http://localhost:3001/api/posts/checkId/${id}`,
+            const checkId = await fetch(`${API_URL}/api/posts/checkId/${id}`,
             {
                 credentials:"include"
             })
@@ -82,7 +83,7 @@ function UserProfilePage() {
     },[])
     const followUser = async(id) =>
     {
-        const followData =  await fetch(`http://localhost:3001/api/users/follow/${id}`,{
+        const followData =  await fetch(`${API_URL}/api/users/follow/${id}`,{
               method: "POST",
               credentials: "include",
               headers: { 'Content-Type': 'application/json' }
@@ -94,7 +95,7 @@ function UserProfilePage() {
     }
         const unFollowUser = async(id) =>
     {
-        const followData =  await fetch(`http://localhost:3001/api/users/unfollow/${id}`,{
+        const followData =  await fetch(`${API_URL}/api/users/unfollow/${id}`,{
               method: "DELETE",
               credentials: "include",
               headers: { 'Content-Type': 'application/json' }
@@ -107,7 +108,7 @@ function UserProfilePage() {
 
         const handleConversation = async() =>
         {
-          const data = await fetch(`http://localhost:3001/api/conversations/addConversation/${Id}`,
+          const data = await fetch(`${API_URL}/api/conversations/addConversation/${Id}`,
             {
               method: "POST",
               credentials: "include",

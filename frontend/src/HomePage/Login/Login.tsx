@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./login.css";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../api";
 
 function LoginPage() {
   
@@ -13,22 +14,20 @@ function LoginPage() {
   
     {
       e.preventDefault()
-      const data = await fetch ("http://localhost:3001/api/auth/login", {
+      const data = await fetch (`${API_URL}/api/auth/login`, {
       method: "POST",
       credentials: "include",
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({username: username.trim(),password: password.trim()})
     })
     const json = await data.json()
-    if(data.status === 404)
+    if(!data.ok)
     {
-      setError(json.message);
+      setError(json.message || "Unable to log in")
+      return
     }
-    else
-    {
-      navigate("/")
-      location.reload()
-    }
+    navigate("/")
+    location.reload()
   
   }
  

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Header from "../../Header/Header";
 import "./avalibleChats.css";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../api";
 
 function AvalibleChats() {
 
@@ -13,7 +14,7 @@ function AvalibleChats() {
 {
     const fetchData = async() => 
     {
-        const data = await fetch(`http://localhost:3001/api/conversations/conversationsUser/`,{
+        const data = await fetch(`${API_URL}/api/conversations/conversationsUser/`,{
         credentials: "include"
       }) 
       const json = await data.json()

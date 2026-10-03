@@ -112,7 +112,7 @@ router.post("/messagePost/:id", protect, upload.single("file"), async (req,res) 
         let image_url = null
         if(req.file)
         {
-             image_url = `http://localhost:3001/Posts/${req.file.filename}`
+             image_url = `${API_URL}/Posts/${req.file.filename}`
         }
         const result = await pool.query(`INSERT INTO messages(conversation_id, sender_id,content,image_url) VALUES($1,$2,$3,$4) RETURNING *`, [conversationId,userId,content,image_url])
         return res.status(200).json({message: result.rows})    

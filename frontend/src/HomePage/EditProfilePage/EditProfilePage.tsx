@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./editProfile.css";
 import Header from "../../Header/Header";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../api";
 
 function EditProfilePage() {
 
@@ -26,7 +27,7 @@ function EditProfilePage() {
       formData.append("email", email);
       formData.append("bio", bio);
 
-      const data = await fetch("http://localhost:3001/api/users/edit", {
+      const data = await fetch(`${API_URL}/api/users/edit`, {
         method: "PUT",
         credentials: "include",
         body: formData
@@ -42,7 +43,7 @@ function EditProfilePage() {
          {
              const fetchData = async() =>
              {
-                 const data = await fetch("http://localhost:3001/api/auth/me",{
+                 const data = await fetch(`${API_URL}/api/auth/me`,{
                    credentials: "include"
                  })
                  const json = await data.json()

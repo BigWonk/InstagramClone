@@ -103,7 +103,7 @@ router.put("/edit", protect, upload.single("image"), async (req,res) =>
     let profile_picture = null 
     if(req.file)
         {
-           profile_picture = `http://localhost:3001/Posts/${req.file.filename}`;
+           profile_picture = `http://192.168.0.141:3001/Posts/${req.file.filename}`;
             
         }
     

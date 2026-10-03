@@ -5,6 +5,7 @@ import Header from "../Header/Header";
 import {socket} from "../App"
 import { IoSend } from "react-icons/io5";
 import { CiFileOn } from "react-icons/ci";
+import { API_URL } from "../api";
 
 
 
@@ -32,7 +33,7 @@ useEffect(() =>
 {
     const fetchData = async() =>
     {
-      const UserData = await fetch(`http://localhost:3001/api/conversations/conversation/${id}`,{
+      const UserData = await fetch(`${API_URL}/api/conversations/conversation/${id}`,{
         credentials: "include"
       }) 
       const jsonUserData = await UserData.json()
@@ -67,20 +68,20 @@ useEffect(() =>
     const fetchAllData = async() =>
     {
       
-      const MessagesData = await fetch(`http://localhost:3001/api/conversations/messages/${id}`,{
+      const MessagesData = await fetch(`${API_URL}/api/conversations/messages/${id}`,{
         credentials: "include",
       }) 
       const jsonMessagesData = await MessagesData.json()
       const Messages = Array.isArray(jsonMessagesData.message) ? jsonMessagesData.message : [];
 
       setMessages(Messages);
-       const HostData = await fetch(`http://localhost:3001/api/auth/me`,{
+      const HostData = await fetch(`${API_URL}/api/auth/me`,{
         credentials: "include"
       }) 
       const jsonHostData = await HostData.json()
       setUserId(jsonHostData.id)
       
-      const UserData = await fetch(`http://localhost:3001/api/conversations/checkUsers/${id}`,{
+      const UserData = await fetch(`${API_URL}/api/conversations/checkUsers/${id}`,{
         credentials: "include"
       }) 
     const jsonUserData = await UserData.json()
@@ -92,7 +93,7 @@ useEffect(() =>
     }
       
       
-      const seenMessages = await fetch(`http://localhost:3001/api/conversations/seen/${id}`,
+      const seenMessages = await fetch(`${API_URL}/api/conversations/seen/${id}`,
         {
           method: "PUT",
           credentials:"include"
@@ -136,7 +137,7 @@ useEffect(() =>
       const formData = new FormData();
         formData.append("file", file);
         formData.append("content", content);
-        const data = await fetch(`http://localhost:3001/api/conversations/messagePost/${id}`,{
+        const data = await fetch(`${API_URL}/api/conversations/messagePost/${id}`,{
           method: "POST",
           credentials: "include",
           body: formData

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Header from "../../Header/Header";
 import "./comments.css";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { API_URL } from "../../api";
 
 
 function CommentsPage() {
@@ -17,20 +18,20 @@ const [likeStatus, setLikeStatus] = useState(false);
 {
   const fetchData = async () =>
   {
-    const data = await fetch(`http://localhost:3001/api/posts/comments/${id}`,{
+    const data = await fetch(`${API_URL}/api/posts/comments/${id}`,{
       credentials: "include"
     })
     const json = await data.json();
     const Comments = Array.isArray(json.comments) ? json.comments : [];
     setComments(Comments);
    
-    const post = await fetch(`http://localhost:3001/api/posts/post/${id}`,{
+    const post = await fetch(`${API_URL}/api/posts/post/${id}`,{
       credentials: "include"
     })
     const postJson = await post.json();
     setPost(postJson)
 
-    const dataStatus = await fetch(`http://localhost:3001/api/posts/checkLiked/${id}`,{
+    const dataStatus = await fetch(`${API_URL}/api/posts/checkLiked/${id}`,{
       credentials: "include"
     })
     if(dataStatus.status == 200)
@@ -52,7 +53,7 @@ const [likeStatus, setLikeStatus] = useState(false);
   
     {
         e.preventDefault()
-        const data = await fetch(`http://localhost:3001/api/posts/comment/${id}`,{
+        const data = await fetch(`${API_URL}/api/posts/comment/${id}`,{
         method: "POST",
         credentials: "include",  
         headers: { 'Content-Type': 'application/json' },
@@ -70,7 +71,7 @@ const [likeStatus, setLikeStatus] = useState(false);
  
   const handleLike = async(id) =>
 {
-  const data = await fetch(`http://localhost:3001/api/posts/like/${id}`,{
+  const data = await fetch(`${API_URL}/api/posts/like/${id}`,{
     method: "POST",
     credentials: "include",
     headers: { 'Content-Type': 'application/json' }
@@ -82,7 +83,7 @@ const [likeStatus, setLikeStatus] = useState(false);
 }
 const handleUser = async(id) =>
 {
-  const data = await fetch(`http://localhost:3001/api/posts/checkId/${id}`,
+  const data = await fetch(`${API_URL}/api/posts/checkId/${id}`,
     {
     credentials:"include"
     })

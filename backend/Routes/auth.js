@@ -11,7 +11,8 @@ const router = express.Router()
 const cookieOptions =
 {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",    
+    sameSite: "lax",
+    secure: false,
     maxAge: 30 * 24 * 60 * 60 * 1000
 }
 
@@ -27,18 +28,18 @@ router.post("/login", async (req, res) =>
        const {username, password} = req.body 
        if(!username || !password)
        {
-            return res.status(404).json({message: "Please send all required fields!"})
+            return res.status(400).json({message: "Please send all required fields!"})
        }
        const user = await pool.query("SELECT * FROM users WHERE username = $1", [username])
        if(user.rows.length === 0)
        {
-           return res.status(404).json({message: "User with this username doesnt exist!"})
+           return res.status(400).json({message: "User with this username doesnt exist!"})
        }
         const userData = user.rows[0];
-        const isMatch = bcrypt.compare(password, userData.password)
+        const isMatch =  await bcrypt.compare(password, userData.password)
         if(!isMatch)
         {
-             return res.status(404).json({message: "Wrong password"})
+             return res.status(400).json({message: "Wrong password"})
         }
     const token = generateToken(userData.id);
     res.cookie("token", token, cookieOptions)
@@ -66,17 +67,18 @@ router.post("/register", upload.single("file"), async (req, res) =>
        let profile_picture = null
         if(req.file)
         {
-             profile_picture = `http://localhost:3001/Posts/${req.file.filename}`
+           profile_picture = `http://192.168.0.141:3001/Posts/${req.file.filename}`;
+            
         }
        if(!email || !password || !username)
        {
-            return res.status(404).json({message: "Please send all required fields!"})
+            return res.status(400).json({message: "Please send all required fields!"})
        }
        const user = await pool.query("SELECT * FROM users WHERE email = $1", [email])
     
        if(user.rows.length != 0)
        {
-           return res.status(404).json({message: "User with this email already exist!"})
+           return res.status(400).json({message: "User with this email already exist!"})
        }
     
     const hashedPassword = await bcrypt.hash(password, 10);

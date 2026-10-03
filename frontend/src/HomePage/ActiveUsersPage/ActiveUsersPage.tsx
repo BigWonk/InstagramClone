@@ -4,6 +4,7 @@ import {socket} from "../../App"
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type path from "path";
+import { API_URL } from "../../api";
 interface User {
   id: number;
   username: string;
@@ -53,7 +54,7 @@ function ActiveUsersPage() {
     const fetchUserDetails = async () => {
       const profiles = await Promise.all(
         users.map(async (u) => {
-          const response = await fetch(`http://localhost:3001/api/users/getUser/${u.userId}`, {
+          const response = await fetch(`${API_URL}/api/users/getUser/${u.userId}`, {
             credentials: "include"
           });
           const json = await response.json();
@@ -71,7 +72,7 @@ function ActiveUsersPage() {
   {
     const fetchData = async() =>
     {
-      const data = await fetch("http://localhost:3001/api/auth/me", {
+      const data = await fetch(`${API_URL}/api/auth/me`, {
         credentials: "include"
       })
       const json = await data.json()
@@ -82,7 +83,7 @@ function ActiveUsersPage() {
 
   const handleChat = async(id) =>
   {
-    const data = await fetch(`http://localhost:3001/api/conversations/addConversation/${id}`,
+    const data = await fetch(`${API_URL}/api/conversations/addConversation/${id}`,
             {
               method: "POST",
               credentials: "include",

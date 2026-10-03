@@ -1,21 +1,21 @@
 import { useEffect } from "react";
 import "./header.css";
 import { Link, useNavigate } from "react-router-dom";
+import { API_URL } from "../api";
 
 function Header() {
   
   const navigate = useNavigate()
-
     const fetchDataAccount = async() =>
     {
-        const data = await fetch("http://localhost:3001/api/auth/verify",
+        const data = await fetch(`${API_URL}/api/auth/verify`,
           {
             credentials: "include"
           }
         )
         if(data.status != 200)
         {
-            navigate("/login")
+            navigate("/")
         }
         else
         {
@@ -25,14 +25,14 @@ function Header() {
       }
        const fetchDataChats = async() =>
     {
-        const data = await fetch("http://localhost:3001/api/auth/verify",
+        const data = await fetch(`${API_URL}/api/auth/verify`,
           {
             credentials: "include"
           }
         )
         if(data.status != 200)
         {
-            navigate("/login")
+            navigate("/")
         }
         else
         {
@@ -42,7 +42,7 @@ function Header() {
       }
      const LogOut = async () =>
      {
-        const data = await fetch("http://localhost:3001/api/auth/logout",
+        const data = await fetch(`${API_URL}/api/auth/logout`,
           {
             method: "POST",
             credentials: "include",
@@ -50,7 +50,7 @@ function Header() {
           })
           if(data.status === 204)
           {
-            navigate("/login")
+            navigate("/")
           }
      }
 

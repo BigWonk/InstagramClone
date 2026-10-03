@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Header from "../../Header/Header";
 import "./createPost.css";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../api";
 
 function CreatePostPage() {
   
@@ -15,7 +16,7 @@ function CreatePostPage() {
     {
         const fetchData = async() =>
         {
-            const data = await fetch("http://localhost:3001/api/auth/me",{
+            const data = await fetch(`${API_URL}/api/auth/me`,{
               credentials: "include"
             })
             const json = await data.json();
@@ -35,7 +36,7 @@ function CreatePostPage() {
         formData.append("file", file);
         formData.append("caption", caption);
 
-        const data = await fetch("http://localhost:3001/api/posts/uploadPost",
+        const data = await fetch(`${API_URL}/api/posts/uploadPost`,
             {
                 method: "POST",
                 credentials: "include",

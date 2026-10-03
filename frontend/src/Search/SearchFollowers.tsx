@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./followers.css";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Header from "../Header/Header";
+import { API_URL } from "../api";
 
 interface User {
   id: number;
@@ -88,7 +89,7 @@ function FollowersPage() {
 
 
   const handleSearch = async () => {
-    const data = await fetch(`http://localhost:3001/api/auth/verify`, {
+    const data = await fetch(`${API_URL}/api/auth/verify`, {
       credentials: "include"
     })
     if(data.status === 200)
@@ -110,7 +111,7 @@ useEffect(() => {
       return;
     }
 
-    const data = await fetch(`http://localhost:3001/api/users/search/${encodeURIComponent(search)}`, {
+    const data = await fetch(`${API_URL}/api/users/search/${encodeURIComponent(search)}`, {
       credentials: "include"
     });
     const json = await data.json();
@@ -121,7 +122,7 @@ useEffect(() => {
     await Promise.all(
       Followers.map(async (user: User) => {
         if (typeof user.id !== "undefined") {
-          const response = await fetch(`http://localhost:3001/api/users/checkFollow/${user.id}`, {
+          const response = await fetch(`${API_URL}/api/users/checkFollow/${user.id}`, {
             credentials: "include"
           });
           statuses[user.id] = response.status !== 200;
@@ -139,7 +140,7 @@ const followUser = async(id) =>
 {
   if(typeof id !== "undefined")
   {
-    const data = await fetch(`http://localhost:3001/api/users/follow/${id}`,{
+    const data = await fetch(`${API_URL}/api/users/follow/${id}`,{
       method: "POST",
       credentials: "include",
        headers: { 'Content-Type': 'application/json' },
@@ -156,7 +157,7 @@ const unFollowUser = async(id) =>
 {
   if(typeof id !== "undefined")
   {
-    const data = await fetch(`http://localhost:3001/api/users/unfollow/${id}`,{
+    const data = await fetch(`${API_URL}/api/users/unfollow/${id}`,{
       method: "DELETE",
       credentials: "include",
        headers: { 'Content-Type': 'application/json' },

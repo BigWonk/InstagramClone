@@ -15,12 +15,12 @@ import ChatPage from "./Messages/ChatPage"
 import { useEffect, useState } from 'react'
 import { io } from "socket.io-client";
 import AvalibleChats from './HomePage/AvalibleChats/AvalibleChats'
+import { API_URL } from './api'
 
-
-
-export const socket =
-    io("http://localhost:3001");
-
+export const socket = io(API_URL, {
+  transports: ["websocket", "polling"],
+  withCredentials: true
+});
 
 function App() {
   const [id, setId] = useState();
@@ -28,7 +28,7 @@ function App() {
   {
    const fetchData = async() =>
    {
-    const response = await fetch("http://localhost:3001/api/auth/me", {
+    const response = await fetch(`${API_URL}/api/auth/me`, {
         credentials: "include"
       })
     const data = await response.json()

@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import "./account.css";
 import { useEffect, useState } from "react";
 import Header from "../../Header/Header";
+import { API_URL } from "../../api";
 
 
 function AccountPage() {
@@ -17,7 +18,7 @@ function AccountPage() {
     {
         const fetchData = async() =>
         {
-            const data = await fetch("http://localhost:3001/api/auth/me",{
+            const data = await fetch(`${API_URL}/api/auth/me`,{
               credentials: "include"
             })
             const json = await data.json()
@@ -25,7 +26,7 @@ function AccountPage() {
             setEmail(json.email)
             setBio(json.bio)
             setProfilePicture(json.profile_picture)
-            const dataFollowers = await fetch("http://localhost:3001/api/users/followers",{
+            const dataFollowers = await fetch(`${API_URL}/api/users/followers`,{
               credentials: "include"
             })
             const jsonFollowers = await dataFollowers.json()
@@ -33,13 +34,13 @@ function AccountPage() {
             
             
             
-            const dataFollowing = await fetch("http://localhost:3001/api/users/following",{
+            const dataFollowing = await fetch(`${API_URL}/api/users/following`,{
               credentials: "include"
             })
             const jsonFollowing = await dataFollowing.json()
             setFollowing(jsonFollowing.message[0].count)
             
-            const PostsData =  await fetch("http://localhost:3001/api/posts/postsByUser",{
+            const PostsData =  await fetch(`${API_URL}/api/posts/postsByUser`,{
               credentials: "include"
             })
             const jsonPosts = await PostsData.json()

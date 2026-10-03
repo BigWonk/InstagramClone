@@ -7,6 +7,7 @@ import { protect } from "../Middleware/auth.js"
 import { upload } from "../Middleware/image.js"
 
 const router = express.Router()
+const API_URL = "http://192.168.0.141:3001";
 
 
 router.post("/uploadPost", protect, upload.single("file"), async (req, res) =>
@@ -16,7 +17,7 @@ router.post("/uploadPost", protect, upload.single("file"), async (req, res) =>
     let post = null
     if(req.file)
     {
-        post = `http://localhost:3001/Posts/${req.file.filename}`
+        post = `${API_URL}:3001/Posts/${req.file.filename}`
     }
     
     try 

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./register.css";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../api";
 
 function RegisterPage() {
   
@@ -24,7 +25,7 @@ function RegisterPage() {
     formData.append("email", email.trim())
     formData.append("password", password.trim())
     if (profile_picture) formData.append("file", profile_picture)
-    const data = await fetch("http://localhost:3001/api/auth/register",
+    const data = await fetch(`${API_URL}/api/auth/register`,
         {method: "POST",
         credentials: "include",
         body: formData
@@ -37,7 +38,7 @@ function RegisterPage() {
       else
       {
           navigate("/")
-          location.reload()
+         
 
       }
   }

@@ -2,7 +2,8 @@ import { use, useCallback, useEffect, useRef, useState } from "react";
 import "./HomePage.css";
 import { useNavigate } from "react-router-dom";
 import Header from "../Header/Header";
-import { DiVim } from "react-icons/di";
+import { API_URL } from "../api";
+
 
 function HomePage() {
   
@@ -14,20 +15,52 @@ const [hasMore, setHasMore] = useState(true);
 const [loading, setLoading] = useState(false);
 const loaderRef = useRef(null);
 const isFetchingRef = useRef(false)
+const [logged, setLogged] = useState(false);
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+   const [error, setError] = useState("")
+
+  const handleSubmit = async(e) =>
+  
+    {
+      e.preventDefault()
+      const data = await fetch (`${API_URL}/api/auth/login`, {
+      method: "POST",
+      credentials: "include",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({username: username.trim(),password: password.trim()})
+    })
+    const json = await data.json()
+    if(!data.ok)
+    {
+      setError(json.message || "Unable to log in")
+      return
+    }
+    navigate("/account")
+  
+  }
+
+
 
 const checkLogged = async () =>
 {
-  const data = await fetch(`http://localhost:3001/api/auth/me`,{
+  const data = await fetch(`${API_URL}/api/auth/me`,{
       credentials: "include"
     })
     if(data.status != 200)
     {
-        navigate("/login")
+        setLogged(false) 
     }
+    else
+    {
+      setLogged(true)
+    } 
+ console.log(false)
 }
-useEffect(() =>
+ useEffect(() =>
 {
   checkLogged()
+  console.log(false)
 },[])
 
 
@@ -37,8 +70,8 @@ useEffect(() =>
    setLoading(true);
     try {
       const url = cursor
-        ? `http://localhost:3001/api/posts/Allposts?cursor=${cursor}`
-        : `http://localhost:3001/api/posts/Allposts`;
+        ? `${API_URL}/api/posts/Allposts?cursor=${cursor}`
+        : `${API_URL}/api/posts/Allposts`;
 
       const data = await fetch(url, { credentials: "include" });
       if (!data.ok) {
@@ -88,7 +121,7 @@ useEffect(() =>
 
 const handleSearch = async () =>
 {
-  const data = await fetch(`http://localhost:3001/api/auth/verify`,{
+  const data = await fetch(`${API_URL}/api/auth/verify`,{
       credentials: "include"
     })
     if(data.status === 200)
@@ -102,7 +135,7 @@ const handleSearch = async () =>
 }
 const handleLike = async(id) =>
 {
-  const data = await fetch(`http://localhost:3001/api/posts/like/${id}`,{
+  const data = await fetch(`${API_URL}/api/posts/like/${id}`,{
     method: "POST",
     credentials: "include",
     headers: { 'Content-Type': 'application/json' }
@@ -114,7 +147,7 @@ const handleLike = async(id) =>
 }
 const handleUser = async(id) =>
 {
-  const data = await fetch(`http://localhost:3001/api/posts/checkId/${id}`,
+  const data = await fetch(`${API_URL}/api/posts/checkId/${id}`,
     {
     credentials:"include"
     })
@@ -127,10 +160,10 @@ const handleUser = async(id) =>
     navigate(`/accounts?id=${id}`)
   }
 }
+console.log(logged)
 
 
-    return (
-      <div>
+    return ( logged ? (<div>
         <Header></Header>
       
    <div className="page">
@@ -168,10 +201,6 @@ const handleUser = async(id) =>
   </div>
 
 </div>
-
-
-
-
 
         <div className="posts">
 
@@ -253,8 +282,55 @@ const handleUser = async(id) =>
       </div>
 
     </div>
-  </div>
+  </div>)
+    :
+    (<div className="login-page">
+      <div className="login-container">
+        <div className="login-left">
+          <img
+            src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop"
+            alt="Social Media"
+          />
+        </div>
+
+        <div className="login-right">
+          <div className="login-card">
+
+            <form className="login-form" onSubmit={handleSubmit}>
+              <input
+                type="text"
+                placeholder="Username"
+                value = {username}
+                onChange={(e) => {setUsername(e.target.value)} }
+              />
+
+              <input
+                type="password"
+                placeholder="Password"
+                value = {password}
+                onChange={(e) => {setPassword(e.target.value)} }
+              />
+
+              <button type="submit">
+                Log In
+              </button>
+              <h3>{error}</h3>
+            </form>
+          </div>
+
+          <div className="register-card">
+            <p>Don't have an account?</p>
+            <a href="/register">Sign up</a>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>)
+      
   );
 }
+
 
 export default HomePage;
