@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./login.css";
 import { useNavigate } from "react-router-dom";
-import { API_URL } from "../../api";
+import { API_URL } from "../../../../backend/api";
 
 function LoginPage() {
   

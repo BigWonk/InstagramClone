@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./userProfile.css";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Header from "../Header/Header";
-import { API_URL } from "../api";
+import { API_URL } from "../../../backend/api";
 
 
 

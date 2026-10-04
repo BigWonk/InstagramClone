@@ -5,6 +5,8 @@ import bcrypt from "bcrypt"
 import pool from "../index.js"
 import { protect } from "../Middleware/auth.js"
 import { upload } from "../Middleware/image.js"
+import { storeImage, storeMetadata } from "../Middleware/storingImages.js"
+import { readFile } from "node:fs/promises"
 
 const router = express.Router()
 
@@ -64,10 +66,30 @@ router.post("/register", upload.single("file"), async (req, res) =>
     try 
     {
        const {username ,email, password} = req.body 
-       let profile_picture = null
+       let profile_picture = "https://pub-8059e83318e94103a8312b1854a1646c.r2.dev/360_F_703861114_7YxIPnoH8NfmbyEffOziaXy0EO1NpRHD.jpg"
+       
         if(req.file)
         {
-           profile_picture = `http://192.168.0.141:3001/Posts/${req.file.filename}`;
+        const contentType = req.file.mimetype
+        const imageData = await storeImage(req.file.filename, contentType) 
+        let presignedUrl = imageData.presignedUrl
+        const uploadResponse = await fetch(presignedUrl, {
+        method: "PUT",
+        headers:
+        {
+            "Content-Type": contentType
+        },
+        body: await readFile(req.file.path)
+    })
+    if(uploadResponse.status == 200)
+    {
+        await storeMetadata(imageData.objectKey, imageData.publicFileUrl, userId)
+        profile_picture = imageData.publicFileUrl
+    }
+    else
+    {
+        console.log("ERROR")
+    }
             
         }
        if(!email || !password || !username)

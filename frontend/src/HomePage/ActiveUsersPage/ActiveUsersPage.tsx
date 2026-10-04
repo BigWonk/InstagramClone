@@ -4,7 +4,7 @@ import {socket} from "../../App"
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type path from "path";
-import { API_URL } from "../../api";
+import { API_URL } from "../../../../backend/api";
 interface User {
   id: number;
   username: string;

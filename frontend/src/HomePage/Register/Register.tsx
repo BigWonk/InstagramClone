@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./register.css";
 import { useNavigate } from "react-router-dom";
-import { API_URL } from "../../api";
+import { API_URL } from "../../../../backend/api";
 
 function RegisterPage() {
   
@@ -15,9 +15,9 @@ function RegisterPage() {
  
     {
       e.preventDefault()
-      if(!email || !username || !password || !profile_picture)
+      if(!email || !username || !password)
     {
-      setError("Please give a value to all fields")
+      setError("Please give a value to all required fields")
       return
     }
     const formData = new FormData()

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./editProfile.css";
 import Header from "../../Header/Header";
 import { useNavigate } from "react-router-dom";
-import { API_URL } from "../../api";
+import { API_URL } from "../../../../backend/api";
 
 function EditProfilePage() {
 

@@ -15,7 +15,7 @@ import ChatPage from "./Messages/ChatPage"
 import { useEffect, useState } from 'react'
 import { io } from "socket.io-client";
 import AvalibleChats from './HomePage/AvalibleChats/AvalibleChats'
-import { API_URL } from './api'
+import { API_URL } from '../../backend/api'
 
 export const socket = io(API_URL, {
   transports: ["websocket", "polling"],

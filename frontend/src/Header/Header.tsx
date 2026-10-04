@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import "./header.css";
 import { Link, useNavigate } from "react-router-dom";
-import { API_URL } from "../api";
+import { API_URL } from "../../../backend/api";
 
 function Header() {
   

@@ -5,24 +5,47 @@ import bcrypt from "bcrypt"
 import pool from "../index.js"
 import { protect } from "../Middleware/auth.js"
 import { upload } from "../Middleware/image.js"
-
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { neon } from '@neondatabase/serverless';
+import 'dotenv/config';
+import { randomUUID } from 'crypto';
+import { storeImage, storeMetadata } from "../Middleware/storingImages.js"
+import {API_URL} from "../api.ts"
+import { readFile } from "node:fs/promises"
 const router = express.Router()
-const API_URL = "http://192.168.0.141:3001";
 
 
 router.post("/uploadPost", protect, upload.single("file"), async (req, res) =>
 {
     const userId = req.user.id
     const {caption} = req.body
-    let post = null
-    if(req.file)
+
+    const contentType = req.file.mimetype
+    const imageData = await storeImage(req.file.filename, contentType)
+   
+    let presignedUrl = imageData.presignedUrl
+    const uploadResponse = await fetch(presignedUrl, {
+        method: "PUT",
+        headers:
+        {
+            "Content-Type": contentType
+        },
+        body: await readFile(req.file.path)
+    })
+    if(uploadResponse.status == 200)
     {
-        post = `${API_URL}:3001/Posts/${req.file.filename}`
+        await storeMetadata(imageData.objectKey, imageData.publicFileUrl, userId)
+    }
+    else
+    {
+        console.log("ERROR")
     }
     
+
     try 
     {
-        const result = await pool.query("INSERT INTO posts(user_id, caption, image_url) VALUES($1,$2,$3)", [userId, caption, post])
+        const result = await pool.query(`INSERT INTO posts(user_id, caption, image_url) VALUES($1,$2,$3)`, [userId, caption, imageData.publicFileUrl])
         return res.status(200).json({comment: result.rows})
     } 
     catch (error) 

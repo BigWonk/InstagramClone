@@ -2,6 +2,9 @@ import express from "express";
 import pool from "../index.js";
 import { protect } from "../Middleware/auth.js"
 import { upload } from "../Middleware/image.js"
+import { storeImage, storeMetadata } from "../Middleware/storingImages.js"
+import { readFile } from "node:fs/promises"
+
 const router = express.Router()
 
 router.post("/addConversation/:id", protect, async(req,res) =>
@@ -109,13 +112,30 @@ router.post("/messagePost/:id", protect, upload.single("file"), async (req,res) 
         const userId = req.user.id
         const conversationId = req.params.id
         const {content} = req.body
-        let image_url = null
+        let imageData = null
         if(req.file)
         {
-             image_url = `${API_URL}/Posts/${req.file.filename}`
-        }
-        const result = await pool.query(`INSERT INTO messages(conversation_id, sender_id,content,image_url) VALUES($1,$2,$3,$4) RETURNING *`, [conversationId,userId,content,image_url])
+           
+        const contentType = req.file.mimetype
+         imageData = await storeImage(req.file.filename, contentType) 
+         let presignedUrl = imageData.presignedUrl
+    const uploadResponse = await fetch(presignedUrl, {
+        method: "PUT",
+        headers:
+        {
+            "Content-Type": contentType
+        },
+        body: await readFile(req.file.path)
+    })
+            const result = await pool.query(`INSERT INTO messages(conversation_id, sender_id,content,image_url) VALUES($1,$2,$3,$4) RETURNING *`, [conversationId,userId,content,imageData.publicFileUrl])
         return res.status(200).json({message: result.rows})    
+        }
+        else
+        {
+            const result = await pool.query(`INSERT INTO messages(conversation_id, sender_id,content,image_url) VALUES($1,$2,$3,$4) RETURNING *`, [conversationId,userId,content,null])
+        return res.status(200).json({message: result.rows})    
+        }
+   
     }
     catch (error) 
     {

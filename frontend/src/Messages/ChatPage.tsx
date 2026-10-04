@@ -5,7 +5,7 @@ import Header from "../Header/Header";
 import {socket} from "../App"
 import { IoSend } from "react-icons/io5";
 import { CiFileOn } from "react-icons/ci";
-import { API_URL } from "../api";
+import { API_URL } from "../../../backend/api";
 
 
 

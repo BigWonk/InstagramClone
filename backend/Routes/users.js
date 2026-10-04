@@ -2,6 +2,8 @@ import pool from "../index.js";
 import express from "express"
 import { protect } from "../Middleware/auth.js"
 import { upload } from "../Middleware/image.js";
+import { storeImage, storeMetadata } from "../Middleware/storingImages.js"
+import { readFile } from "node:fs/promises"
 
 
 const router = express.Router()
@@ -100,12 +102,27 @@ router.put("/edit", protect, upload.single("image"), async (req,res) =>
 {
     const userId = req.user.id
     const {username, email, bio} = req.body;
-    let profile_picture = null 
-    if(req.file)
+    const contentType = req.file.mimetype
+    const imageData = await storeImage(req.file.filename, contentType)
+   
+    let presignedUrl = imageData.presignedUrl
+    const uploadResponse = await fetch(presignedUrl, {
+        method: "PUT",
+        headers:
         {
-           profile_picture = `http://192.168.0.141:3001/Posts/${req.file.filename}`;
-            
-        }
+            "Content-Type": contentType
+        },
+        body: await readFile(req.file.path)
+    })
+    if(uploadResponse.status == 200)
+    {
+        await storeMetadata(imageData.objectKey, imageData.publicFileUrl, userId)
+    }
+    else
+    {
+        console.log("ERROR")
+    }
+    
     
     try 
     {
@@ -117,7 +134,7 @@ router.put("/edit", protect, upload.single("image"), async (req,res) =>
         }
        else
        {
-        const result = await pool.query("UPDATE users SET username = $1, profile_picture = $2, bio = $3, email = $4 WHERE id = $5 RETURNING *", [username, profile_picture, bio, email, userId])
+        const result = await pool.query("UPDATE users SET username = $1, profile_picture = $2, bio = $3, email = $4 WHERE id = $5 RETURNING *", [username, imageData.publicFileUrl, bio, email, userId])
         return res.status(200).json({message: "Succesfully updated user profile!"}) 
     } 
        }

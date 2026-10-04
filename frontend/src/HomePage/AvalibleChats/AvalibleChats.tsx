@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Header from "../../Header/Header";
 import "./avalibleChats.css";
 import { useNavigate } from "react-router-dom";
-import { API_URL } from "../../api";
+import { API_URL } from "../../../../backend/api";
 
 function AvalibleChats() {
 
